@@ -80,7 +80,11 @@ async function deinscribirte(id){
     user_id: user.value.id,
     action_id: id,
   });
-  window.location.reload();
+  console.log(id) //undefinded
+  await axios.post(`${API_SERVER}/api/action/aumentarPlazas`, {
+    action_id: id,
+  });
+fetchActions();
 }
 const calculateEndTime = (startTime, durationInMinutes) => {
   const [hours, minutes] = startTime.slice(0, 5).split(":").map(Number); // Recortamos la cadena de inicio
@@ -100,6 +104,10 @@ const formatTime = (time) => {
   // Si la hora está en formato 'HH:MM:SS', recortamos los últimos 3 caracteres ('SS')
   return time ? time.slice(0, 5) : '';
 };
+
+onMounted(() => {
+  fetchActions();
+})
 </script>
 
 <template>
