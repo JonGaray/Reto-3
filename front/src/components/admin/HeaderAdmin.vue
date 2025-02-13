@@ -6,13 +6,13 @@
           <h4>Panel de Administrador</h4>
         </div>
         <div class="d-flex flex-row">
-          <button class="btn btn-sm btn-outline-success boton  me-4   " @click="insertAction(action)">
+          <button class="btn btn-sm btn-success boton  me-4   " @click="insertAction(action)">
             <img src="../../assets/img/anadir.png" alt="insert">
             Nueva Actividad</button>
-          <button class="btn btn-sm btn-outline-success boton me-4   " @click="openCentroModal()">
+          <button class="btn btn-sm btn-success boton me-4   " @click="openCentroModal()">
             <img src="../../assets/img/anadir.png" alt="insert">
             Nuevo centro</button>
-          <button class="btn btn-outline-success" @click="router.push({path:'/'})">Volver</button>
+          <button class="btn btn-outline-secondary" @click="router.push({path:'/'})">Volver</button>
 
         </div>
       </div>
@@ -79,7 +79,7 @@
             </select>
           </div>
           <div class="form-group d-flex justify-content-center mb-2 gap-3 col-8 offset-2">
-            <button type="submit" class="btn btn-success mt-3">Guardar Cambios</button>
+            <button type="submit" class="btn btn-success mt-3">Guardar</button>
             <button class="btn btn-danger mt-3" @click="closeActionModal">Cancelar</button>
           </div>
         </form>
@@ -102,7 +102,7 @@
           </div>
           <div class="d-flex justify-content-center gap-4">
             <div class="d-flex justify-content-center">
-              <button type="submit" class="btn btn-success my-3" @click="insertarCentro()">Guardar Centro</button>
+              <button type="submit" class="btn btn-success my-3" @click="insertarCentro()">Guardar</button>
             </div>
             <div class="d-flex justify-content-center">
               <button type="button" class="btn btn-danger my-3" @click="closeCentroModal()">Cancelar</button>
@@ -361,11 +361,7 @@ const saveAction = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: black;
-}
 
-.boton:hover {
-  color: black;
 }
 
 .boton img {
