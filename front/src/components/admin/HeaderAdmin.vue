@@ -14,13 +14,19 @@
             Nuevo centro</button>
           <button class="btn btn-outline-success" @click="router.push({path:'/'})">Volver</button>
 
+        <button class="btn btn-sm btn-outline-success boton me-4   " @click="insertAction(action)">
+          <img src="../../assets/img/anadir.png" alt="insert">
+          Nueva Actividad</button>
+        <button class="btn btn-outline-danger boton" @click="router.push('/')">Volver</button>
         </div>
       </div>
+
     </div>
 
+    <div v-if="showModal" class="modal-overlay col-10 offset-1 mt-3" @click="closeModal">
     <div v-if="showModal" class="modal-overlay col-10 offset-1 my-3" @click="closeModal">
       <div class="modal-content" @click.stop>
-        <h4>Insertar Acción</h4>
+        <h4 class="d-flex justify-content-center mt-3">Insertar Acción</h4>
         <form @submit.prevent="saveAction">
           <div class="form-group col-8 offset-2">
             <label for="name"><b>Nombre</b></label>
@@ -97,14 +103,14 @@
           </div>
           <div class="form-group col-8 offset-2">
             <label for="description"><b>Calle</b></label>
-            <textarea v-model="calleCentro" id="calle" class="form-control" required />
+            <input  type="text" v-model="calleCentro" id="calle" class="form-control" required />
           </div>
           <div class="d-flex justify-content-center gap-4">
           <div class="d-flex justify-content-center">
             <input type="submit" class="btn btn-success my-3" @click="insertarCentro()">
           </div>
           <div class="d-flex justify-content-center">
-            <input type="submit" class="btn btn-success my-3" @click="cerrarModal()" value="Cancelar">
+            <input type="submit" class="btn btn-danger my-3" @click="cerrarModal()" value="Cancelar">
           </div>
           </div>
         </form>
@@ -146,8 +152,10 @@ const selectedAction = ref({
 const router = useRouter();
 
 // Al montar el componente, llamamos a la API para obtener los centros
+
 onMounted(() => {
   fetchCenters();
+  fetchActions();
 });
 function cerrarModal(){
   showModalCentro.value = false;
@@ -177,7 +185,14 @@ const insertAction = (action) => {
   selectedAction.value = { ...action };
   showModal.value = true;
 };
-
+const fetchActions = async () => {
+  try {
+    const response = await axios.get(`${API_SERVER}/api/action/center`);
+    actions.value = response.data.data;
+  } catch (error) {
+    console.error("Error al obtener las acciones:", error);
+  }
+};
 const closeModal = () => {
   showModal.value = false;
 };
@@ -222,6 +237,17 @@ const saveAction = async () => {
   let formattedDateInit = selectedAction.value.date_init;
   let formattedDateEnd = selectedAction.value.date_end;
 
+  if (formattedDateInit && formattedDateEnd && formattedDateInit > formattedDateEnd) {
+    Swal.fire({
+      confirmButtonColor: "#198754",
+      confirmButtonText: "Cerrar",
+      icon: "error",
+      title: "Error en las fechas",
+      text: "La fecha de inicio no puede ser posterior a la fecha de finalización.",
+    });
+    return;
+  }
+
   if (formattedStartTime && formattedStartTime.length === 5) {
     const today = new Date().toISOString().split("T")[0];
     formattedStartTime = `${today} ${formattedStartTime}:00`;
@@ -238,7 +264,7 @@ const saveAction = async () => {
   // 🔹 Validación: Si el usuario no ha seleccionado una categoría, mostramos alerta y detenemos el envío
   if (!selectedAction.value.category) {
     Swal.fire({
-      confirmButtonColor: "#dc3545",
+      confirmButtonColor: "#198754",
       confirmButtonText: "Cerrar",
       icon: "warning",
       title: "Debes seleccionar una categoría antes de continuar",
@@ -282,11 +308,10 @@ const saveAction = async () => {
       capacity: "",
       languaje: "",
       age: "",
-      category: "", // 💡 Reiniciamos category
+      category: "",
       center_id: null,
     };
-
-    fetchActions();
+    await fetchActions();
     closeModal();
   } catch (error) {
     console.error("Error al crear la acción:", error.response?.data || error);
@@ -303,7 +328,7 @@ const saveAction = async () => {
 </script>
 
 <style scoped>
-.insert {
+.boton {
   margin: 0;
   display: flex;
   justify-content: center;
@@ -311,11 +336,11 @@ const saveAction = async () => {
   color: black;
 }
 
-.insert:hover {
+.boton:hover {
   color: black;
 }
 
-.insert img {
+.boton img {
   width: 16px;
   margin-right: 6px;
 }

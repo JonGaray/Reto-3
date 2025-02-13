@@ -147,11 +147,11 @@ onMounted(() => {
       <p class="alert alert-success">No hay actividades disponibles</p>
     </div>
     <div v-for="activity in filteredActions" :key="activity.id" class="col-md-4">
-      <div class="card mt-3" style="height: 430px; max-height: 430px;">
-        <img v-if="activity.category === 'cultura'" src="../../../assets/img/cultura.jpg" class="card-img-top" alt="Cultura" style="height: 100px; object-fit: cover;">
-        <img v-else-if="activity.category === 'deportes'" src="../../../assets/img/deportes.jpg" class="card-img-top" alt="Deportes" style="height: 100px; object-fit: cover;">
-        <img v-else-if="activity.category === 'educacion'" src="../../../assets/img/educacion.jpg" class="card-img-top" alt="Educación" style="height: 100px; object-fit: cover;">
-        <img v-else-if="activity.category === 'medio ambiente'" src="../../../assets/img/medio%20ambiente.jpg" class="card-img-top" alt="Educación" style="height: 100px; object-fit: cover;">
+      <div class="card mt-3" style="height: 520px; max-height: 520px;">
+        <img v-if="activity.category === 'cultura'" src="../../../assets/img/cultura.jpg" class="card-img-top" alt="Cultura" style="height: 200px; object-fit: cover;">
+        <img v-else-if="activity.category === 'deportes'" src="../../../assets/img/deportes.jpg" class="card-img-top" alt="Deportes" style="height: 200px; object-fit: cover;">
+        <img v-else-if="activity.category === 'educacion'" src="../../../assets/img/educacion.jpg" class="card-img-top" alt="Educación" style="height: 200px; object-fit: cover;">
+        <img v-else-if="activity.category === 'medio ambiente'" src="../../../assets/img/medio%20ambiente.jpg" class="card-img-top" alt="Educación" style="height: 200px; object-fit: cover;">
         <div class="card-body d-flex justify-content-between flex-column text-start" >
           <div class="d-flex justify-content-between">
         <span class="badge bg-light text-dark">
@@ -160,7 +160,7 @@ onMounted(() => {
             <span class="badge bg-light text-dark">{{ activity.price }}€/hora</span>
           </div>
           <h4 class="mt-3">{{ activity.name }}</h4>
-          <p class="text-secondary mb-0">{{ activity.center ? activity.center.name : 'Centro no disponible' }}</p>
+          <p class="text-secondary mb-0"> Centro: {{ activity.center ? activity.center.name : 'Centro no disponible' }}</p>
           <p class="text-muted mb-0">Edad: {{ activity.age }}</p>
           <p class="text-muted mb-0">Idioma: {{ activity.languaje }}</p>
           <p class="text-muted mb-0">Horario: {{ formatTime(activity.start_time) }} - {{ formatTime(calculateEndTime(activity.start_time, activity.duration)) }}</p>
