@@ -15,8 +15,8 @@ return new class extends Migration
             $table->primary(['action_id', 'user_id']);
             $table->bigInteger('action_id')->unsigned();
             $table->bigInteger('user_id')->unsigned();
-            $table->foreign('action_id')->references('id')->on('actions');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('action_id')->references('id')->on('actions')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
