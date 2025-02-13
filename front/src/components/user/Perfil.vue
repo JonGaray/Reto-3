@@ -11,6 +11,7 @@ const user = ref({});
 const mail = ref("");
 const pass = ref("********")
 const isEditing = ref(false);
+const cambioEditar = ref(false);
 console.log(actions)
 
 
@@ -40,6 +41,7 @@ const fetchActions = async () => {
 
 function editarPerfil() {
   isEditing.value = true;
+  cambioEditar.value = true;
 }
 
 async function añadirCambios() {
@@ -52,10 +54,10 @@ async function añadirCambios() {
     });
 
     if (response.status === 200) {
-      alert("Cambios guardados con éxito");
       isEditing.value = false;
       sessionStorage.setItem("user", JSON.stringify(user.value));
     }
+    cambioEditar.value=false;
   } catch (error) {
     console.error("Error al guardar los cambios:", error);
     alert("Error al guardar los cambios. Por favor, inténtalo de nuevo.");
@@ -119,15 +121,15 @@ onMounted(() => {
           <h1>Actividades disponibles</h1>
           <p>Explora y regístrate en nuestras actividades deportivas y culturales</p>
         </div>
-        <button class="btn btn-outline-success" @click="router.push('/')">Volver</button>
+        <button class="btn btn-outline-secondary" @click="router.push('/')">Volver</button>
       </div>
     </div>
 
 
-    <div class="card shadow-sm mb-5 position-relative">
+    <div class="card shadow-sm mb-5 position-relative" style="max-width: 1000px; margin: 0 auto;">  <!-- Added max-width and margin -->
       <div class="card-body d-flex justify-content-evenly">
 
-        <div class="position-absolute top-0 end-0 m-3">
+        <div class="position-absolute top-0 end-0 m-3 ms-5" v-if="!cambioEditar">
           <button class="btn btn-success" @click="editarPerfil()">Editar</button>
         </div>
 
@@ -139,33 +141,33 @@ onMounted(() => {
         </div>
 
         <div class="mb-4">
-          <div class="mb-3 d-flex">
+          <div class="mb-3 d-flex justify-content-end">
             <label class="text-muted mb-1 me-4">Nombre:</label>
-            <input type="text" v-model="user.name" class="form-control" :disabled="!isEditing"/>
+            <input style="min-width: 150px; max-width: 250px" type="text" v-model="user.name" class="form-control" :disabled="!isEditing" />
           </div>
 
-          <div class="mb-3 d-flex">
+          <div class="mb-3 d-flex justify-content-end">
             <label class="text-muted mb-1 me-4">Apellido:</label>
-            <input type="text" v-model="user.lastname" class="form-control" :disabled="!isEditing"/>
+            <input style="min-width: 150px; max-width: 250px" type="text" v-model="user.lastname" class="form-control" :disabled="!isEditing" />
           </div>
 
-          <div class="mb-3 d-flex">
+          <div class="mb-3 d-flex justify-content-end">
             <label class="text-muted mb-1 me-4">Email:</label>
-            <input type="text" v-model="mail" class="form-control" :disabled="!isEditing"/>
+            <input style="min-width: 150px; max-width: 250px" type="text" v-model="mail" class="form-control" :disabled="!isEditing" />
           </div>
 
-          <div class="mb-3 d-flex">
+          <div class="mb-3 d-flex justify-content-end">
             <label class="text-muted mb-1 me-4">DNI:</label>
-            <input type="text" v-model="user.dni" class="form-control" :disabled="!isEditing"/>
+            <input style="min-width: 150px; max-width: 250px" type="text" v-model="user.dni" class="form-control" :disabled="!isEditing" />
           </div>
 
-          <div class="mb-3 d-flex">
+          <div class="mb-3 d-flex justify-content-end">
             <label class="text-muted mb-1 me-4">Contraseña:</label>
-            <input type="password" v-model="pass" class="form-control" :disabled="!isEditing"/>
+            <input style="min-width: 150px; max-width: 250px;" type="password" v-model="pass" class="form-control" :disabled="!isEditing" />
           </div>
 
           <div class="mt-3 text-center" v-if="isEditing">
-            <button class="btn btn-primary" @click="añadirCambios()">Guardar Cambios</button>
+            <button class="btn btn-success  " @click="añadirCambios()">Guardar Cambios</button>
           </div>
         </div>
       </div>
@@ -174,6 +176,11 @@ onMounted(() => {
     <h3 class="h5 text-center mb-4">Actividades Inscritas</h3>
     <div class="row justify-content-center mb-5">
       <div v-for="action in actions" :key="action.id" class="card p-3 shadow col-md-5 col-sm-12 my-3 mx-2">
+        <img v-if="action.category === 'cultura'" src="../../assets/img/cultura.jpg" class="card-img-top" alt="Cultura" style="height: 200px; object-fit: cover;">
+        <img v-else-if="action.category === 'deportes'" src="../../assets/img/deportes.jpg" class="card-img-top" alt="Deportes" style="height: 200px; object-fit: cover;">
+        <img v-else-if="action.category === 'educacion'" src="../../assets/img/educacion.jpg" class="card-img-top" alt="Educación" style="height: 200px; object-fit: cover;">
+        <img v-else-if="action.category === 'medio ambiente'" src="../../assets/img/medio%20ambiente.jpg" class="card-img-top" alt="Educación" style="height: 200px; object-fit: cover;">
+
         <div class="d-flex justify-content-between">
           <span class="badge bg-light text-dark">{{ action.capacity }} plazas disponibles</span>
           <span class="badge bg-light text-dark">{{ action.price }}€/mes</span>

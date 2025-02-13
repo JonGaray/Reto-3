@@ -43,14 +43,15 @@ function panelAdmin(){
         <button class="btn btn-success" @click="iniciarSesion()">Iniciar sesión</button>
       </div>
       <div v-if="user" class="d-flex align-items-center gap-2">
-        <button class="btn btn-success" @click="cerrarSesion()">Cerrar sesión</button>
+
         <div v-if="user.role === 'user'">
-          <a class="btn btn-outline-success" @click="perfilUser()">Ver perfil</a>
+          <a class="btn btn-success" @click="perfilUser()">Ver perfil</a>
         </div>
         <div v-if="user.role === 'admin'">
-          <a class="btn btn-outline-success" @click="panelAdmin()">Panel de administracion</a>
-
+          <a class="btn btn-success" @click="panelAdmin()">Panel de administracion</a>
         </div>
+        <button class="btn btn-outline-secondary" @click="cerrarSesion()">Cerrar sesión</button>
+
       </div>
     </div>
   </div>

@@ -115,7 +115,7 @@ function register(){
         </form>
 
         <p class="mt-3 text-muted">
-          <a href="" @click.prevent="register()">Registrate</a> y explora nuestras actividades deportivas y culturales
+          <a href="" @click.prevent="register()" class="text-success">Registrate</a> y explora nuestras actividades deportivas y culturales
         </p>
       </div>
     </div>
