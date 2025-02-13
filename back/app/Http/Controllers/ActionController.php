@@ -44,7 +44,9 @@ class ActionController extends Controller
     }
     public function showAll()
     {
-        $actions = Action::with('center')->get();
+        $actions = Action::with('center')
+            ->orderBy('id', 'desc') // Order by 'id' in ascending order (oldest first)
+            ->get();
         return response()->json(['message' => '', 'data' => $actions], 200);
     }
 

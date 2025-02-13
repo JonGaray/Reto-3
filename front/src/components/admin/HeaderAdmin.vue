@@ -6,25 +6,20 @@
           <h4>Panel de Administrador</h4>
         </div>
         <div class="d-flex flex-row">
-          <button class="btn btn-sm btn-outline-success insert me-4   " @click="insertAction(action)">
+          <button class="btn btn-sm btn-outline-success boton  me-4   " @click="insertAction(action)">
             <img src="../../assets/img/anadir.png" alt="insert">
             Nueva Actividad</button>
-          <button class="btn btn-sm btn-outline-success insert me-4   " @click="insertCentro()">
+          <button class="btn btn-sm btn-outline-success boton me-4   " @click="openCentroModal()">
             <img src="../../assets/img/anadir.png" alt="insert">
             Nuevo centro</button>
           <button class="btn btn-outline-success" @click="router.push({path:'/'})">Volver</button>
 
-        <button class="btn btn-sm btn-outline-success boton me-4   " @click="insertAction(action)">
-          <img src="../../assets/img/anadir.png" alt="insert">
-          Nueva Actividad</button>
-        <button class="btn btn-outline-danger boton" @click="router.push('/')">Volver</button>
         </div>
       </div>
 
     </div>
 
     <div v-if="showModal" class="modal-overlay col-10 offset-1 mt-3" @click="closeModal">
-    <div v-if="showModal" class="modal-overlay col-10 offset-1 my-3" @click="closeModal">
       <div class="modal-content" @click.stop>
         <h4 class="d-flex justify-content-center mt-3">Insertar Acción</h4>
         <form @submit.prevent="saveAction">
@@ -85,7 +80,7 @@
           </div>
           <div class="form-group d-flex justify-content-center mb-2 gap-3 col-8 offset-2">
             <button type="submit" class="btn btn-success mt-3">Guardar Cambios</button>
-            <button class="btn btn-danger mt-3" @click="closeModal">Cancelar</button>
+            <button class="btn btn-danger mt-3" @click="closeActionModal">Cancelar</button>
           </div>
         </form>
       </div>
@@ -93,7 +88,7 @@
 
 
 
-    <div v-if="showModalCentro" class="modal-overlay col-10 offset-1 my-3" @click="closeModal">
+    <div v-if="showModalCentro" class="modal-overlay col-10 offset-1 my-3" @click="closeCentroModal">
       <div class="modal-content" @click.stop>
         <h4>Crear centro</h4>
         <form @submit.prevent="saveCenter">
@@ -103,15 +98,15 @@
           </div>
           <div class="form-group col-8 offset-2">
             <label for="description"><b>Calle</b></label>
-            <input  type="text" v-model="calleCentro" id="calle" class="form-control" required />
+            <input type="text" v-model="calleCentro" id="calle" class="form-control" required />
           </div>
           <div class="d-flex justify-content-center gap-4">
-          <div class="d-flex justify-content-center">
-            <input type="submit" class="btn btn-success my-3" @click="insertarCentro()">
-          </div>
-          <div class="d-flex justify-content-center">
-            <input type="submit" class="btn btn-danger my-3" @click="cerrarModal()" value="Cancelar">
-          </div>
+            <div class="d-flex justify-content-center">
+              <button type="submit" class="btn btn-success my-3" @click="insertarCentro()">Guardar Centro</button>
+            </div>
+            <div class="d-flex justify-content-center">
+              <button type="button" class="btn btn-danger my-3" @click="closeCentroModal()">Cancelar</button>
+            </div>
           </div>
         </form>
       </div>
@@ -119,21 +114,22 @@
 
 
 
-
   </div>
+
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import Swal from "sweetalert2";
-import {useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 
 const API_SERVER = import.meta.env.VITE_API_SERVER;
 const centers = ref([]);
+const actions = ref([]); // Add this line
 const showModal = ref(false);
 const showModalCentro = ref(false);
-const nombreCentro=ref("");
+const nombreCentro = ref("");
 const calleCentro = ref("");
 const selectedAction = ref({
   name: "",
@@ -157,9 +153,20 @@ onMounted(() => {
   fetchCenters();
   fetchActions();
 });
-function cerrarModal(){
+
+const openCentroModal = () => {
+  showModalCentro.value = true;
+  showModal.value = false;
+};
+
+const closeCentroModal = () => {
   showModalCentro.value = false;
-}
+};
+
+const closeActionModal = () => {
+  showModal.value = false;
+};
+
 const fetchCenters = async () => {
   try {
     const response = await axios.get(`${API_SERVER}/api/center/all`);
@@ -169,17 +176,39 @@ const fetchCenters = async () => {
   }
 };
 
-const insertCentro = () => {
-  showModalCentro.value = true;
-  showModal.value=false;
-}
-async function insertarCentro(){
-  const response = await axios.post(`${API_SERVER}/api/center`, {
-    name: nombreCentro.value,
-    address: calleCentro.value,
-  });
-  showModalCentro.value=false;
-}
+const insertarCentro = async () => {
+  try {
+    const response = await axios.post(`${API_SERVER}/api/center`, {
+      name: nombreCentro.value,
+      address: calleCentro.value,
+    });
+
+    if (response.status === 201) {  // Assuming 201 means created
+      Swal.fire({
+        icon: 'success',
+        title: 'Centro Cívico creado!',
+        showConfirmButton: false,
+        timer: 1500
+      });
+      // Refresh centers list
+      await fetchCenters();
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al crear el centro',
+      });
+    }
+    showModalCentro.value = false;
+  } catch (error) {
+    console.error("Error al insertar el centro:", error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error al crear el centro',
+      text: error.message // Show error message
+    });
+  }
+};
+
 const insertAction = (action) => {
   showModalCentro.value = false;
   selectedAction.value = { ...action };
@@ -195,6 +224,7 @@ const fetchActions = async () => {
 };
 const closeModal = () => {
   showModal.value = false;
+  showModalCentro.value = false; // also close the other modal when closing action modal
 };
 const saveCenter = async () => {
   try {
@@ -217,17 +247,17 @@ const saveCenter = async () => {
       return;
     }
 
-    // Aquí iría la lógica para guardar el centro
-    console.log("Centro guardado correctamente");
+    // Here would go the logic to save the center
+    console.log("Center saved successfully");
 
   } catch (error) {
-    console.error("Error al guardar el centro:", error);
+    console.error("Error saving the center:", error);
     Swal.fire({
       confirmButtonColor: "#dc3545",
       confirmButtonText: "Cerrar",
       icon: "error",
-      title: "Ocurrió un error",
-      text: "No se pudo guardar el centro. Inténtalo de nuevo.",
+      title: "An error occurred",
+      text: "Could not save the center. Please try again.",
     });
   }
 };
@@ -242,8 +272,8 @@ const saveAction = async () => {
       confirmButtonColor: "#198754",
       confirmButtonText: "Cerrar",
       icon: "error",
-      title: "Error en las fechas",
-      text: "La fecha de inicio no puede ser posterior a la fecha de finalización.",
+      title: "Error on the dates",
+      text: "The start date can't be after the end date.",
     });
     return;
   }
@@ -261,13 +291,13 @@ const saveAction = async () => {
     formattedDateEnd = formattedDateEnd.split("T")[0];
   }
 
-  // 🔹 Validación: Si el usuario no ha seleccionado una categoría, mostramos alerta y detenemos el envío
+  // Validation: If the user has not selected a category, show alert and stop the submission
   if (!selectedAction.value.category) {
     Swal.fire({
       confirmButtonColor: "#198754",
       confirmButtonText: "Cerrar",
       icon: "warning",
-      title: "Debes seleccionar una categoría antes de continuar",
+      title: "You must select a category before continuing",
     });
     return;
   }
@@ -280,7 +310,7 @@ const saveAction = async () => {
   };
 
   try {
-    console.log("Datos a enviar:", dataToSend);
+    console.log("Data to send:", dataToSend);
     const response = await axios.post(`${API_SERVER}/api/action`, dataToSend, {
       headers: {
         "Content-Type": "application/json",
@@ -288,15 +318,14 @@ const saveAction = async () => {
       },
     });
 
-    console.log("Acción creada:", response.data);
+    console.log("Action created:", response.data);
     Swal.fire({
       confirmButtonColor: "#198754",
       confirmButtonText: "Cerrar",
       icon: "success",
-      title: "Acción creada con éxito",
+      title: "Action created successfully",
     });
 
-    // 🔹 Reiniciamos el formulario
     selectedAction.value = {
       name: "",
       description: "",
@@ -312,18 +341,17 @@ const saveAction = async () => {
       center_id: null,
     };
     await fetchActions();
-    closeModal();
+    closeActionModal(); // Close the Action Modal specifically
   } catch (error) {
-    console.error("Error al crear la acción:", error.response?.data || error);
+    console.error("Error creating the action:", error.response?.data || error);
     Swal.fire({
       confirmButtonColor: "#198754",
       confirmButtonText: "Cerrar",
       icon: "error",
-      title: "Hubo un error al crear la acción",
+      title: "There was an error creating the action",
     });
   }
 };
-
 
 </script>
 
