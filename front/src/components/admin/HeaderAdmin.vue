@@ -99,8 +99,13 @@
             <label for="description"><b>Calle</b></label>
             <textarea v-model="calleCentro" id="calle" class="form-control" required />
           </div>
+          <div class="d-flex justify-content-center gap-4">
           <div class="d-flex justify-content-center">
             <input type="submit" class="btn btn-success my-3" @click="insertarCentro()">
+          </div>
+          <div class="d-flex justify-content-center">
+            <input type="submit" class="btn btn-success my-3" @click="cerrarModal()" value="Cancelar">
+          </div>
           </div>
         </form>
       </div>
@@ -144,7 +149,9 @@ const router = useRouter();
 onMounted(() => {
   fetchCenters();
 });
-
+function cerrarModal(){
+  showModalCentro.value = false;
+}
 const fetchCenters = async () => {
   try {
     const response = await axios.get(`${API_SERVER}/api/center/all`);

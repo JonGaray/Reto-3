@@ -147,12 +147,12 @@ onMounted(() => {
       <p class="alert alert-success">No hay actividades disponibles</p>
     </div>
     <div v-for="activity in filteredActions" :key="activity.id" class="col-md-4">
-      <div class="card mt-3" style="height: 400px; max-height: 400px;">
+      <div class="card mt-3" style="height: 430px; max-height: 430px;">
         <img v-if="activity.category === 'cultura'" src="../../../assets/img/cultura.jpg" class="card-img-top" alt="Cultura" style="height: 100px; object-fit: cover;">
         <img v-else-if="activity.category === 'deportes'" src="../../../assets/img/deportes.jpg" class="card-img-top" alt="Deportes" style="height: 100px; object-fit: cover;">
         <img v-else-if="activity.category === 'educacion'" src="../../../assets/img/educacion.jpg" class="card-img-top" alt="Educación" style="height: 100px; object-fit: cover;">
         <img v-else-if="activity.category === 'medio ambiente'" src="../../../assets/img/medio%20ambiente.jpg" class="card-img-top" alt="Educación" style="height: 100px; object-fit: cover;">
-        <div class="card-body d-flex justify-content-between flex-column" >
+        <div class="card-body d-flex justify-content-between flex-column text-start" >
           <div class="d-flex justify-content-between">
         <span class="badge bg-light text-dark">
           {{ activity.capacity }} plazas disponibles
