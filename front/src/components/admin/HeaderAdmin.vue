@@ -13,10 +13,8 @@
             <img src="../../assets/img/anadir.png" alt="insert">
             Nuevo centro</button>
           <button class="btn btn-outline-success" @click="router.push({path:'/'})">Volver</button>
-
         </div>
       </div>
-
     </div>
 
     <div v-if="showModal" class="modal-overlay col-10 offset-1 mt-3" @click="closeModal">
@@ -87,7 +85,6 @@
     </div>
 
 
-
     <div v-if="showModalCentro" class="modal-overlay col-10 offset-1 my-3" @click="closeCentroModal">
       <div class="modal-content" @click.stop>
         <h4>Crear centro</h4>
@@ -111,9 +108,6 @@
         </form>
       </div>
     </div>
-
-
-
   </div>
 
 </template>
@@ -256,8 +250,8 @@ const saveCenter = async () => {
       confirmButtonColor: "#dc3545",
       confirmButtonText: "Cerrar",
       icon: "error",
-      title: "An error occurred",
-      text: "Could not save the center. Please try again.",
+      title: "Ha ocurrido un error",
+      text: "No se ha podido guardar el centro. Por favor intentelo otra vez.",
     });
   }
 };
@@ -269,11 +263,11 @@ const saveAction = async () => {
 
   if (formattedDateInit && formattedDateEnd && formattedDateInit > formattedDateEnd) {
     Swal.fire({
-      confirmButtonColor: "#198754",
+      confirmButtonColor: "#dc3545",
       confirmButtonText: "Cerrar",
       icon: "error",
-      title: "Error on the dates",
-      text: "The start date can't be after the end date.",
+      title: "Error en las fechas",
+      text: "La fecha de inicio no puede ser posterior a la de finalización",
     });
     return;
   }
@@ -294,10 +288,11 @@ const saveAction = async () => {
   // Validation: If the user has not selected a category, show alert and stop the submission
   if (!selectedAction.value.category) {
     Swal.fire({
-      confirmButtonColor: "#198754",
+      confirmButtonColor: "#dc3545",
       confirmButtonText: "Cerrar",
       icon: "warning",
-      title: "You must select a category before continuing",
+      title: "Error con las categorías",
+      text: "Debes seleccionar un categoría `para poder continuar",
     });
     return;
   }
@@ -320,10 +315,10 @@ const saveAction = async () => {
 
     console.log("Action created:", response.data);
     Swal.fire({
-      confirmButtonColor: "#198754",
-      confirmButtonText: "Cerrar",
       icon: "success",
-      title: "Action created successfully",
+      title: "Acción creada!",
+      showConfirmButton: false,
+      timer: 1500
     });
 
     selectedAction.value = {
@@ -345,10 +340,11 @@ const saveAction = async () => {
   } catch (error) {
     console.error("Error creating the action:", error.response?.data || error);
     Swal.fire({
-      confirmButtonColor: "#198754",
+      confirmButtonColor: "#dc3545",
       confirmButtonText: "Cerrar",
       icon: "error",
-      title: "There was an error creating the action",
+      title: 'Error al crear la acción',
+      text: error.message
     });
   }
 };
