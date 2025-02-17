@@ -6,10 +6,10 @@
           <h4>Panel de Administrador</h4>
         </div>
         <div class="d-flex flex-row">
-          <button class="btn btn-sm btn-success boton  me-4   " @click="insertAction(action)">
+          <button class="btn btn-sm btn-success boton text-white  me-4   " @click="insertAction(action)">
             <img src="../../assets/img/anadir.png" alt="insert">
             Nueva Actividad</button>
-          <button class="btn btn-sm btn-success boton me-4   " @click="openCentroModal()">
+          <button class="btn btn-sm btn-success text-white boton me-4   " @click="openCentroModal()">
             <img src="../../assets/img/anadir.png" alt="insert">
             Nuevo centro</button>
           <button class="btn btn-outline-success" @click="router.push({path:'/'})">Volver</button>
