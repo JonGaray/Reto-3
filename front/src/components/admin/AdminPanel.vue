@@ -1,6 +1,5 @@
 <template>
-  <div class="container mt-4">
-    <Header />
+  <div class="container mt-4" v-if="showPanel">
     <table class="table table-bordered text-center">
       <thead class="table-light">
       <tr>
@@ -22,8 +21,8 @@
         <td>{{ action.price }}€</td>
         <td>{{ action.capacity }}</td>
         <td class="botones">
-          <button class="btn btn-sm btn-outline-success" @click="">
-            <img src="../../assets/img/grupo.png" alt="editar">
+          <button class="btn btn-sm btn-outline-success" @click="viewUsers(action.id)">
+            <img src="../../assets/img/grupo.png" alt="inscritos">
           </button>
           <button class="btn btn-sm btn-outline-warning" @click="editAction(action)">
             <img src="../../assets/img/editar.png" alt="editar">
@@ -36,9 +35,10 @@
       </tbody>
     </table>
 
-    <div v-if="showModal" class="modal-overlay col-10 offset-1 " @click="closeModal">
+    <!-- Modal de Edición -->
+    <div v-if="showModal" class="modal-overlay col-10 offset-1 m-0" @click="closeModal">
       <div class="modal-content" @click.stop>
-        <h4>Editar Acción</h4>
+        <h4 class="d-flex justify-content-center mt-2">Editar Acción</h4>
         <form @submit.prevent="saveAction">
           <div class="form-group col-8 offset-2">
             <label for="name"><b>Nombre</b></label>
@@ -58,7 +58,7 @@
           </div>
           <div class="form-group d-flex justify-content-center mb-2 gap-3 col-8 offset-2">
             <button type="submit" class="btn btn-success mt-3">Guardar Cambios</button>
-            <button class="btn btn-danger mt-3" @click="closeModal">Cancelar</button>
+            <button type="button" class="btn btn-danger mt-3" @click="closeModal">Cancelar</button>
           </div>
         </form>
       </div>
@@ -68,17 +68,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import {ref, defineEmits, onMounted} from "vue";
 import axios from "axios";
 import Swal from "sweetalert2";
-import Header from "./HeaderAdmin.vue"
-import TheWelcome from "@/components/TheWelcome.vue";
 
-// Definir las variables
 const actions = ref([]);
 const API_SERVER = import.meta.env.VITE_API_SERVER;
+const showPanel = ref(true);
 const showModal = ref(false);
 const selectedAction = ref({});
+
+const emits = defineEmits(["show-users"]);
 
 const fetchActions = async () => {
   try {
@@ -90,7 +90,10 @@ const fetchActions = async () => {
 };
 
 const editAction = (action) => {
-  selectedAction.value = { ...action };
+  selectedAction.value = {
+    ...action,
+    date_init: action.date_init ? action.date_init.split("T")[0] : "",
+  };
   showModal.value = true;
 };
 
@@ -98,6 +101,7 @@ const closeModal = () => {
   showModal.value = false;
 };
 
+// Guardar cambios de la acción editada
 const saveAction = async () => {
   let formattedStartTime = selectedAction.value.start_time;
   console.log("Fecha original:", formattedStartTime);
@@ -126,8 +130,8 @@ const saveAction = async () => {
 
     console.log(response.data);
     Swal.fire({
-      confirmButtonColor: "#198754",
-      confirmButtonText: "Cerrar",
+      timer: 1500,
+      showConfirmButton: false,
       icon: "success",
       title: "Acción actualizada con éxito"
     });
@@ -144,40 +148,37 @@ const saveAction = async () => {
   }
 };
 
-
+// Eliminar acción
 const deleteAction = async (id) => {
   Swal.fire({
     title: "¿Estás seguro que deseas eliminar esta acción?",
     text: "No podrás deshacer esta decisión",
     icon: "warning",
     showCancelButton: true,
+    confirmButtonText: "Sí, eliminarlo!",
     confirmButtonColor: "#198754",
-    cancelButtonColor: "#d33",
+    cancelButtonColor: "#d50606",
     cancelButtonText: "Cancelar",
-    confirmButtonText: "Si, Eliminarlo!"
   }).then(async (result) => {
     if (result.isConfirmed) {
       try {
         await axios.delete(`${API_SERVER}/api/action/${id}/destroy`);
         await fetchActions();
-        Swal.fire({
-          confirmButtonColor: "#198754",
-          confirmButtonText: "Cerrar",
+        await Swal.fire({
           icon: "success",
-          title: "Acción eliminada con éxito"
-        });
+          title: "Acción eliminada con éxito",
+          showConfirmButton: false,
+          timer: 1500});
       } catch (error) {
         console.error("Error al eliminar la acción:", error);
-        Swal.fire({
-          confirmButtonColor: "#198754",
-          confirmButtonText: "Cerrar",
-          icon: "error",
-          title: "Hubo un error al eliminar la acción"
-        });
       }
     }
   });
+};
 
+const viewUsers = (actionId) => {
+  emits("show-users", actionId);
+  showPanel.value = false;
 };
 
 onMounted(fetchActions);
@@ -190,20 +191,27 @@ onMounted(fetchActions);
   gap: 8px;
 }
 
-button {
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 button img {
   width: 18px;
 }
 
-h4{
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
+  align-items: center;
   justify-content: center;
-  margin-top: 1em;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px;
+  width: 100%;
 }
 </style>

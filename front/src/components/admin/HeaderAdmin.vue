@@ -19,7 +19,7 @@
 
     <div v-if="showModal" class="modal-overlay col-10 offset-1 mt-3" @click="closeModal">
       <div class="modal-content" @click.stop>
-        <h4 class="d-flex justify-content-center mt-3">Insertar Acción</h4>
+        <h4 class="d-flex justify-content-center mt-3">Crear Acción</h4>
         <form @submit.prevent="saveAction">
           <div class="form-group col-8 offset-2">
             <label for="name"><b>Nombre</b></label>
@@ -87,7 +87,7 @@
 
     <div v-if="showModalCentro" class="modal-overlay col-10 offset-1 my-3" @click="closeCentroModal">
       <div class="modal-content" @click.stop>
-        <h4>Crear centro</h4>
+        <h4 class="d-flex justify-content-center mt-3">Crear centro</h4>
         <form @submit.prevent="saveCenter">
           <div class="form-group col-8 offset-2">
             <label for="name"><b>Nombre</b></label>
