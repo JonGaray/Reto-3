@@ -6,15 +6,17 @@
           <h4>Panel de Administrador</h4>
         </div>
         <div class="d-flex flex-row">
-          <button class="btn btn-sm btn-outline-success boton  me-4   " @click="insertAction(action)">
+          <button class="btn btn-sm btn-success boton  me-4   " @click="insertAction(action)">
             <img src="../../assets/img/anadir.png" alt="insert">
             Nueva Actividad</button>
-          <button class="btn btn-sm btn-outline-success boton me-4   " @click="openCentroModal()">
+          <button class="btn btn-sm btn-success boton me-4   " @click="openCentroModal()">
             <img src="../../assets/img/anadir.png" alt="insert">
             Nuevo centro</button>
           <button class="btn btn-outline-success" @click="router.push({path:'/'})">Volver</button>
+
         </div>
       </div>
+
     </div>
 
     <div v-if="showModal" class="modal-overlay col-10 offset-1 mt-3" @click="closeModal">
@@ -77,7 +79,7 @@
             </select>
           </div>
           <div class="form-group d-flex justify-content-center mb-2 gap-3 col-8 offset-2">
-            <button type="submit" class="btn btn-success mt-3">Guardar Cambios</button>
+            <button type="submit" class="btn btn-success mt-3">Guardar</button>
             <button class="btn btn-danger mt-3" @click="closeActionModal">Cancelar</button>
           </div>
         </form>
@@ -99,7 +101,7 @@
           </div>
           <div class="d-flex justify-content-center gap-4">
             <div class="d-flex justify-content-center">
-              <button type="submit" class="btn btn-success my-3" @click="insertarCentro()">Guardar Centro</button>
+              <button type="submit" class="btn btn-success my-3" @click="insertarCentro()">Guardar</button>
             </div>
             <div class="d-flex justify-content-center">
               <button type="button" class="btn btn-danger my-3" @click="closeCentroModal()">Cancelar</button>
@@ -108,6 +110,9 @@
         </form>
       </div>
     </div>
+
+
+
   </div>
 
 </template>
@@ -250,8 +255,8 @@ const saveCenter = async () => {
       confirmButtonColor: "#dc3545",
       confirmButtonText: "Cerrar",
       icon: "error",
-      title: "Ha ocurrido un error",
-      text: "No se ha podido guardar el centro. Por favor intentelo otra vez.",
+      title: "An error occurred",
+      text: "Could not save the center. Please try again.",
     });
   }
 };
@@ -263,11 +268,11 @@ const saveAction = async () => {
 
   if (formattedDateInit && formattedDateEnd && formattedDateInit > formattedDateEnd) {
     Swal.fire({
-      confirmButtonColor: "#dc3545",
+      confirmButtonColor: "#198754",
       confirmButtonText: "Cerrar",
       icon: "error",
-      title: "Error en las fechas",
-      text: "La fecha de inicio no puede ser posterior a la de finalización",
+      title: "Error on the dates",
+      text: "The start date can't be after the end date.",
     });
     return;
   }
@@ -288,11 +293,10 @@ const saveAction = async () => {
   // Validation: If the user has not selected a category, show alert and stop the submission
   if (!selectedAction.value.category) {
     Swal.fire({
-      confirmButtonColor: "#dc3545",
+      confirmButtonColor: "#198754",
       confirmButtonText: "Cerrar",
       icon: "warning",
-      title: "Error con las categorías",
-      text: "Debes seleccionar un categoría `para poder continuar",
+      title: "You must select a category before continuing",
     });
     return;
   }
@@ -315,10 +319,10 @@ const saveAction = async () => {
 
     console.log("Action created:", response.data);
     Swal.fire({
+      confirmButtonColor: "#198754",
+      confirmButtonText: "Cerrar",
       icon: "success",
-      title: "Acción creada!",
-      showConfirmButton: false,
-      timer: 1500
+      title: "Action created successfully",
     });
 
     selectedAction.value = {
@@ -340,11 +344,10 @@ const saveAction = async () => {
   } catch (error) {
     console.error("Error creating the action:", error.response?.data || error);
     Swal.fire({
-      confirmButtonColor: "#dc3545",
+      confirmButtonColor: "#198754",
       confirmButtonText: "Cerrar",
       icon: "error",
-      title: 'Error al crear la acción',
-      text: error.message
+      title: "There was an error creating the action",
     });
   }
 };

@@ -72,7 +72,7 @@
         <button class="btn btn-success w-75 mx-auto my-2" @click="registrarUsuario()">Registrarse</button>
 
         <p class="mt-3 text-muted">
-          ¿Ya tienes una cuenta? <a href="" @click="login()">Inicia sesión</a>
+          ¿Ya tienes una cuenta? <a href="" @click="login()" class="text-success">Inicia sesión</a>
         </p>
       </div>
     </div>
