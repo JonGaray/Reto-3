@@ -140,28 +140,28 @@ onMounted(() => {
           <img src="../../assets/img/fotoPerfil.png" alt="Foto de perfil" style="width: 50%">
         </div>
 
-        <div class="mb-4">
-          <div class="mb-3 d-flex justify-content-end">
+        <div class="mb-4 d-flex flex-column align-items-end">
+          <div class="mb-3 d-flex">
             <label class="text-muted mb-1 me-4">Nombre:</label>
             <input style="min-width: 150px; max-width: 250px" type="text" v-model="user.name" class="form-control" :disabled="!isEditing" />
           </div>
 
-          <div class="mb-3 d-flex justify-content-end">
+          <div class="mb-3 d-flex">
             <label class="text-muted mb-1 me-4">Apellido:</label>
             <input style="min-width: 150px; max-width: 250px" type="text" v-model="user.lastname" class="form-control" :disabled="!isEditing" />
           </div>
 
-          <div class="mb-3 d-flex justify-content-end">
+          <div class="mb-3 d-flex">
             <label class="text-muted mb-1 me-4">Email:</label>
             <input style="min-width: 150px; max-width: 250px" type="text" v-model="mail" class="form-control" :disabled="!isEditing" />
           </div>
 
-          <div class="mb-3 d-flex justify-content-end">
+          <div class="mb-3 d-flex">
             <label class="text-muted mb-1 me-4">DNI:</label>
             <input style="min-width: 150px; max-width: 250px" type="text" v-model="user.dni" class="form-control" :disabled="!isEditing" />
           </div>
 
-          <div class="mb-3 d-flex justify-content-end">
+          <div class="mb-3 d-flex">
             <label class="text-muted mb-1 me-4">Contraseña:</label>
             <input style="min-width: 150px; max-width: 250px;" type="password" v-model="pass" class="form-control" :disabled="!isEditing" />
           </div>
