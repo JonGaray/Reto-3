@@ -49,6 +49,26 @@ class UserController extends Controller
         $user = User::all();
         return response()->json(['message' => '', 'data' => $user], 200);
     }
+
+    public function actions($id)
+    {
+        $users = User::select(
+            'actions.name as action_name',
+            'actions.capacity as action_capacity',
+            'users.id as user_id',
+            'users.name as user_name',
+            'users.lastname as user_lastname',
+            'users.email as user_email',
+            'users.dni as user_dni'
+        )
+            ->join('action_user', 'users.id', '=', 'action_user.user_id')
+            ->join('actions', 'actions.id', '=', 'action_user.action_id')
+            ->where('action_user.action_id', '=', $id)
+            ->get();
+
+        return response()->json(['message' => '', 'data' => $users], 200);
+    }
+
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);

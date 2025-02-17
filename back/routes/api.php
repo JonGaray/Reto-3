@@ -26,6 +26,7 @@ Route::controller(UserController::class)->group(function () {
     Route::post('user', 'store');
     Route::get('/user/joined', 'isEnroled');
     Route::get('user/all','showAll');
+    Route::get('user/{action}/action','actions');
     Route::get('user/{user}', 'show');
     Route::post('user/{user}/update', 'update');
     Route::delete('user/{user}/destroy', 'destroy');
