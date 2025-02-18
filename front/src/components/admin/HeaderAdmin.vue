@@ -16,9 +16,9 @@
 
         </div>
       </div>
-
     </div>
 
+    <!--Model para insertar una nueva actividad-->
     <div v-if="showModal" class="modal-overlay col-10 offset-1 mt-3" @click="closeModal">
       <div class="modal-content" @click.stop>
         <h4 class="d-flex justify-content-center mt-3">Crear Acción</h4>
@@ -86,7 +86,7 @@
       </div>
     </div>
 
-
+    <!--Model para insertar un nuevo centro-->
     <div v-if="showModalCentro" class="modal-overlay col-10 offset-1 my-3" @click="closeCentroModal">
       <div class="modal-content" @click.stop>
         <h4 class="d-flex justify-content-center mt-3">Crear centro</h4>
@@ -146,26 +146,29 @@ const selectedAction = ref({
 });
 const router = useRouter();
 
-// Al montar el componente, llamamos a la API para obtener los centros
-
+// Al cargar la página que se cargen los centros y las acciones
 onMounted(() => {
   fetchCenters();
   fetchActions();
 });
 
+// Función para que sea visible el modal de crear centros y se oculte el de acciones
 const openCentroModal = () => {
   showModalCentro.value = true;
   showModal.value = false;
 };
 
+// Función para que sea oculte el modal de crear centros
 const closeCentroModal = () => {
   showModalCentro.value = false;
 };
 
+// Función para que sea oculte el modal de crear acciones
 const closeActionModal = () => {
   showModal.value = false;
 };
 
+// Función para obtener todos los centros
 const fetchCenters = async () => {
   try {
     const response = await axios.get(`${API_SERVER}/api/center/all`);
@@ -175,6 +178,7 @@ const fetchCenters = async () => {
   }
 };
 
+// Función para insertar el centro nuevo
 const insertarCentro = async () => {
   try {
     const response = await axios.post(`${API_SERVER}/api/center`, {
@@ -182,14 +186,13 @@ const insertarCentro = async () => {
       address: calleCentro.value,
     });
 
-    if (response.status === 201) {  // Assuming 201 means created
+    if (response.status === 201) {
       Swal.fire({
         icon: 'success',
         title: 'Centro Cívico creado!',
         showConfirmButton: false,
         timer: 1500
       });
-      // Refresh centers list
       await fetchCenters();
     } else {
       Swal.fire({
@@ -203,16 +206,19 @@ const insertarCentro = async () => {
     Swal.fire({
       icon: 'error',
       title: 'Error al crear el centro',
-      text: error.message // Show error message
+      text: error.message
     });
   }
 };
 
+// Función para insertar la acción nueva
 const insertAction = (action) => {
   showModalCentro.value = false;
   selectedAction.value = { ...action };
   showModal.value = true;
 };
+
+// Función para obtener los valores necesarios
 const fetchActions = async () => {
   try {
     const response = await axios.get(`${API_SERVER}/api/action/center`);
@@ -221,10 +227,14 @@ const fetchActions = async () => {
     console.error("Error al obtener las acciones:", error);
   }
 };
+
+// Función para cerra todos los madals
 const closeModal = () => {
   showModal.value = false;
-  showModalCentro.value = false; // also close the other modal when closing action modal
+  showModalCentro.value = false;
 };
+
+// Validaciones para que el centro cumpla los requeriminetos necesarios
 const saveCenter = async () => {
   try {
     if (!nombreCentro.value.length || nombreCentro.value.length > 255) {
@@ -246,8 +256,7 @@ const saveCenter = async () => {
       return;
     }
 
-    // Here would go the logic to save the center
-    console.log("Center saved successfully");
+    console.log("Centro creado");
 
   } catch (error) {
     console.error("Error saving the center:", error);
@@ -255,8 +264,8 @@ const saveCenter = async () => {
       confirmButtonColor: "#dc3545",
       confirmButtonText: "Cerrar",
       icon: "error",
-      title: "An error occurred",
-      text: "Could not save the center. Please try again.",
+      title: "Ha ocurrido un error",
+      text: "No se ha podido guardar el centro. Por favor intentelo otra vez.",
     });
   }
 };
@@ -271,8 +280,8 @@ const saveAction = async () => {
       confirmButtonColor: "#198754",
       confirmButtonText: "Cerrar",
       icon: "error",
-      title: "Error on the dates",
-      text: "The start date can't be after the end date.",
+      title: "Error en las fechas",
+      text: "La fecha de inicio no puede ser posterior a la de final.",
     });
     return;
   }
@@ -290,13 +299,12 @@ const saveAction = async () => {
     formattedDateEnd = formattedDateEnd.split("T")[0];
   }
 
-  // Validation: If the user has not selected a category, show alert and stop the submission
   if (!selectedAction.value.category) {
     Swal.fire({
       confirmButtonColor: "#198754",
       confirmButtonText: "Cerrar",
       icon: "warning",
-      title: "You must select a category before continuing",
+      title: "Debes seleccionar una categoría para continuar.",
     });
     return;
   }
@@ -319,10 +327,10 @@ const saveAction = async () => {
 
     console.log("Action created:", response.data);
     Swal.fire({
-      confirmButtonColor: "#198754",
-      confirmButtonText: "Cerrar",
+      showConfirmButton: false,
+      timer: 1500,
       icon: "success",
-      title: "Action created successfully",
+      title: "Acción creada correctamente",
     });
 
     selectedAction.value = {
@@ -340,14 +348,14 @@ const saveAction = async () => {
       center_id: null,
     };
     await fetchActions();
-    closeActionModal(); // Close the Action Modal specifically
+    closeActionModal();
   } catch (error) {
     console.error("Error creating the action:", error.response?.data || error);
     Swal.fire({
       confirmButtonColor: "#198754",
       confirmButtonText: "Cerrar",
       icon: "error",
-      title: "There was an error creating the action",
+      title: "Ha habido un error creando la acción",
     });
   }
 };

@@ -97,6 +97,7 @@ const editAction = (action) => {
   showModal.value = true;
 };
 
+// Función para cerrar el modal
 const closeModal = () => {
   showModal.value = false;
 };
