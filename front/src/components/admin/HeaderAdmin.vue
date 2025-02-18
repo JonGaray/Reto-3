@@ -125,7 +125,7 @@ import { useRouter } from "vue-router";
 
 const API_SERVER = import.meta.env.VITE_API_SERVER;
 const centers = ref([]);
-const actions = ref([]); // Add this line
+const actions = ref([]);
 const showModal = ref(false);
 const showModalCentro = ref(false);
 const nombreCentro = ref("");
@@ -182,7 +182,7 @@ const insertarCentro = async () => {
       address: calleCentro.value,
     });
 
-    if (response.status === 201) {  // Assuming 201 means created
+    if (response.status === 201) {
       Swal.fire({
         icon: 'success',
         title: 'Centro Cívico creado!',
@@ -203,7 +203,7 @@ const insertarCentro = async () => {
     Swal.fire({
       icon: 'error',
       title: 'Error al crear el centro',
-      text: error.message // Show error message
+      text: error.message // mostrar el error
     });
   }
 };
@@ -221,11 +221,11 @@ const fetchActions = async () => {
     console.error("Error al obtener las acciones:", error);
   }
 };
-const closeModal = () => {
+const closeModal = () => { //funcion para cerrar los modales o pop-up
   showModal.value = false;
-  showModalCentro.value = false; // also close the other modal when closing action modal
+  showModalCentro.value = false;
 };
-const saveCenter = async () => {
+const saveCenter = async () => { //guardar el centro
   try {
     if (!nombreCentro.value.length || nombreCentro.value.length > 255) {
       Swal.fire({
@@ -246,7 +246,6 @@ const saveCenter = async () => {
       return;
     }
 
-    // Here would go the logic to save the center
     console.log("Center saved successfully");
 
   } catch (error) {
@@ -290,7 +289,7 @@ const saveAction = async () => {
     formattedDateEnd = formattedDateEnd.split("T")[0];
   }
 
-  // Validation: If the user has not selected a category, show alert and stop the submission
+  // comprobar que haya una categoria seleccionada
   if (!selectedAction.value.category) {
     Swal.fire({
       confirmButtonColor: "#198754",
@@ -302,7 +301,7 @@ const saveAction = async () => {
   }
 
   const dataToSend = {
-    ...selectedAction.value,
+    ...selectedAction.value, //copiamos los valores
     date_init: formattedDateInit,
     date_end: formattedDateEnd,
     start_time: formattedStartTime,
@@ -340,7 +339,7 @@ const saveAction = async () => {
       center_id: null,
     };
     await fetchActions();
-    closeActionModal(); // Close the Action Modal specifically
+    closeActionModal();
   } catch (error) {
     console.error("Error creating the action:", error.response?.data || error);
     Swal.fire({

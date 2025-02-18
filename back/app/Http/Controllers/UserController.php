@@ -10,13 +10,13 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-
-
+    //Metodo para mostrar los datos de un usuario
     public function showOne($id)
     {
         $user = User::findOrFail($id);
         return response()->json(['message' => '', 'data' => $user->actions], 200);
     }
+    //Metodo para validar y crear un nuevo usuario
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -39,17 +39,19 @@ class UserController extends Controller
         ]);
         return response()->json(['message' => 'Usuario creado', 'data' => $user], 200);
     }
+    //Metodo para mostrar los datos de un usuario mediante su ID
     public function show($id)
     {
         $user = User::findOrFail($id);
         return response()->json(['message' => '', 'data' => $user], 200);
     }
+    //Metodo para mostrar todos los usuarios
     public function showAll()
     {
         $user = User::all();
         return response()->json(['message' => '', 'data' => $user], 200);
     }
-
+    //Metodo para obtener las actividades de un usuario
     public function actions($id)
     {
         $users = User::select(
@@ -68,7 +70,7 @@ class UserController extends Controller
 
         return response()->json(['message' => '', 'data' => $users], 200);
     }
-
+    //Metodo para actualizar los valores de un usuario
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -92,12 +94,14 @@ class UserController extends Controller
         $user->save();
         return response()->json(['message' => 'Usuario actualizado', 'data' => $user], 200);
     }
+    //Metodo para eliminar un usuario
     public function destroy($id)
     {
         $user = User::findOrFail($id);
         $user->delete();
         return response()->json(['message' => 'Usuario eliminado', 'data' => $user], 200);
     }
+    //Metodo para iniciar sesion
     public function login(Request $request): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), [
@@ -114,6 +118,7 @@ class UserController extends Controller
         }
         return response()->json(['message' => 'Credenciales incorrectas'], 401);
     }
+    //Metodo para asociar un usuario a una actividad
     public function join(Request $request){
         $validator = Validator::make(request()->all(), [
             'user_id' => 'required|integer',
@@ -128,6 +133,7 @@ class UserController extends Controller
             return response()->json(['message'=>'Usuario asociado','data'=>$user, $action], 200);
         }
     }
+    //Metodo para desasociar un usuario a una actividad
     public function joinDelete(Request $request)
     {
         $user = User::findOrFail($request->user_id);
@@ -139,6 +145,7 @@ class UserController extends Controller
 
         return response()->json(['message' => 'No se encontró la inscripción'], 404);
     }
+    //Metodo para ver a que actividades esta asociado un usuario
     public function isEnroled(Request $request) {
         $user = User::findOrFail($request->user_id);
 

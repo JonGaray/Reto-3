@@ -28,7 +28,7 @@ async function validarUsuario() {
     }
 
   } catch (error) {
-    // ⚠️ Evita que Axios muestre el error en la consola
+    // Evita que Axios muestre el error en la consola
     if (error.response) {
       if (error.response.status === 400) {
         Swal.fire({
@@ -68,7 +68,7 @@ async function validarUsuario() {
   }
 }
 function register(){
-  router.push({path: "/register"});
+  router.push({path: "/register"}); //redireccion de ruta
 }
 </script>
 
