@@ -15,8 +15,8 @@ const cambioEditar = ref(false);
 console.log(actions)
 
 
-onMounted(() => {
-  const storedUser = sessionStorage.getItem("user");
+onMounted(() => { //funcion que realizaremos al montar el componente
+  const storedUser = sessionStorage.getItem("user"); //cargar en el SS los datos del usuario
   if (storedUser) {
     try {
       user.value = JSON.parse(storedUser);
@@ -27,7 +27,7 @@ onMounted(() => {
   }
 });
 
-const fetchActions = async () => {
+const fetchActions = async () => { //Funcion para recoger las actividades
   if (!user.value.id) return;
 
   try {
@@ -39,12 +39,12 @@ const fetchActions = async () => {
   }
 };
 
-function editarPerfil() {
+function editarPerfil() { //Funcion para habilitar la edicion del perfil
   isEditing.value = true;
   cambioEditar.value = true;
 }
 
-async function añadirCambios() {
+async function añadirCambios() { //funcion para guardar los cambios realizados 
   try {
     const response = await axios.post(`${API_SERVER}/api/user/${user.value.id}/update`, {
       name: user.value.name,
@@ -82,11 +82,11 @@ async function deinscribirte(id){
     user_id: user.value.id,
     action_id: id,
   });
-  console.log(id) //undefinded
+  console.log(id)
   await axios.post(`${API_SERVER}/api/action/aumentarPlazas`, {
     action_id: id,
   });
-fetchActions();
+fetchActions(); //llamada para recargar las actividades
 }
 const calculateEndTime = (startTime, durationInMinutes) => {
   const [hours, minutes] = startTime.slice(0, 5).split(":").map(Number); // Recortamos la cadena de inicio

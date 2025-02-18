@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ActionController extends Controller
 {
+    //Creacion y validacion de una actividad
     public function store(Request $request){
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -23,6 +24,7 @@ class ActionController extends Controller
             'center_id' => 'required|integer',
             'category' => 'required|string|max:255'
         ]);
+        //En caso de error de validacion, saltará un error
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
@@ -42,6 +44,7 @@ class ActionController extends Controller
         ]);
         return response()->json(['message' => 'Accion creada', 'data' => $action], 200);
     }
+    //Metodo para mostrar todas las actividades
     public function showAll()
     {
         $actions = Action::with('center')
@@ -49,12 +52,14 @@ class ActionController extends Controller
             ->get();
         return response()->json(['message' => '', 'data' => $actions], 200);
     }
-
+    //Metodo para mostrar una actividad mediante su ID
     public function show($id)
     {
+        //En caso de que no encuentre la actividad, devolverá un error
         $action = Action::findOrFail($id);
         return response()->json(['message' => '', 'data' => $action], 200);
     }
+    //Metodo para actualizar los datos de una actividad
     public function update(Request $request, $id)
     {
         $action = Action::findOrFail($id);
@@ -90,13 +95,14 @@ class ActionController extends Controller
         $action->save();
         return response()->json(['message' => 'Acción actualizada', 'data' => $action], 200);
     }
+    //Metodo para eliminar una actividad
     public function destroy($id)
     {
         $action = Action::findOrFail($id);
         $action->delete();
         return response()->json(['message'=>'Accion eliminada', 'data' => $action], 200);
     }
-
+    //Metodo para recoger el nombre y direccion del centro de una actividad
     public function center()
     {
         $actions = Action::select(
@@ -106,28 +112,24 @@ class ActionController extends Controller
         )
             ->join('centers', 'actions.center_id', '=', 'centers.id')
             ->get();
-
         return response()->json(['message' => '', 'data' => $actions], 200);
     }
-
+    //Metodo para reducir las plazas tras la asociacion de un usuario a una actividad
     public function reducirPlazas(Request $request)
     {
         $activity = Action::find($request->action_id);
-
         if (!$activity) {
             return response()->json(['success' => false, 'message' => 'Actividad no encontrada.'], 404);
         }
-
         // Verificar que haya plazas disponibles
         if ($activity->capacity <= 0) {
             return response()->json(['success' => false, 'message' => 'No hay plazas disponibles para esta actividad.'], 400);
         }
-
         // Restar una plaza disponible
         $activity->decrement('capacity', 1);
-
         return response()->json(['success' => true, 'message' => 'Plazas actualizadas correctamente.']);
     }
+    //Metodo para aumentar las plazas tras la desinscripcion de un usuari a la actividad
     public function aumentarPlazas(Request $request)
     {
         try {

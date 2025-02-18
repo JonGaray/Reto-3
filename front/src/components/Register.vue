@@ -117,7 +117,7 @@ async function registrarUsuario() {
       return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; //validacion del correo
     if (!emailRegex.test(email.value)) {
       Swal.fire({
         icon: 'error',
@@ -127,7 +127,7 @@ async function registrarUsuario() {
       return;
     }
 
-    const dniRegex = /^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i;
+    const dniRegex = /^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i; //validacion del DNI
     if (!dniRegex.test(dni.value)) {
       Swal.fire({
         icon: 'error',
@@ -137,7 +137,7 @@ async function registrarUsuario() {
       return;
     }
 
-    if (password.value.length < 8) {
+    if (password.value.length < 8) { //validacion de la contraseña
       Swal.fire({
         icon: 'error',
         title: 'Contraseña débil',

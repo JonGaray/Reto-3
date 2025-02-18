@@ -37,20 +37,20 @@ import axios from "axios";
 import { ref, defineProps, watch } from "vue";
 
 const users = ref([]);
-const API_SERVER = import.meta.env.VITE_API_SERVER;
+const API_SERVER = import.meta.env.VITE_API_SERVER; //import de la URL desde el .env
 const actionName = ref("");
 const actionCapacity = ref("");
 
-const props = defineProps(["actionId"]);
+const props = defineProps(["actionId"]); //definicion de los parametros que recogemos por el componente
 
 const fetchUsers = async () => {
   if (props.actionId === null) return;
 
   try {
-    const response = await axios.get(`${API_SERVER}/api/user/${props.actionId}/action`);
+    const response = await axios.get(`${API_SERVER}/api/user/${props.actionId}/action`); //llamada a la ruta API del backend
     users.value = response.data.data;
 
-    if (users.value.length > 0) {
+    if (users.value.length > 0) { //validaciones de que haya texto en los imputs
       actionName.value = users.value[0].action_name;
       actionCapacity.value = users.value[0].action_capacity;
     }

@@ -8,11 +8,12 @@ use Illuminate\Support\Facades\Validator;
 
 class CenterController extends Controller
 {
+    //Metodo para mostrar todos los centros
     public function showAll(){
         $centers = Center::all();
         return response()->json($centers);
     }
-
+    //Metodo para validar y crear un nuevo centro
     public function store(Request $request): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), [
@@ -30,7 +31,7 @@ class CenterController extends Controller
         $center->save();
         return response()->json(['Center' => $center], 201);
     }
-
+    //Metodo para actualizar la informacion de un centro
     public function update(Request $request, $id): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), [
@@ -52,7 +53,7 @@ class CenterController extends Controller
         $center->save();
         return response()->json(['Center' => $center]);
     }
-
+    //Metodo para eliminar un centro
     public function destroy($id): \Illuminate\Http\JsonResponse
     {
         $center = Center::find($id);
@@ -65,7 +66,7 @@ class CenterController extends Controller
 
         return response()->json(['message' => 'Centro eliminado correctamente']);
     }
-
+    //Metodo para mostrar la informacion de un centro mediante su ID
     public function show($id): \Illuminate\Http\JsonResponse{
         $center = Center::find($id);
         return response()->json($center);

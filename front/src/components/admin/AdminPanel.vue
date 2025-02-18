@@ -73,17 +73,17 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const actions = ref([]);
-const API_SERVER = import.meta.env.VITE_API_SERVER;
+const API_SERVER = import.meta.env.VITE_API_SERVER; //import de la variable desde el .env
 const showPanel = ref(true);
 const showModal = ref(false);
 const selectedAction = ref({});
 
-const emits = defineEmits(["show-users"]);
+const emits = defineEmits(["show-users"]); //atributis que recogemos desde el componente
 
 const fetchActions = async () => {
   try {
-    const response = await axios.get(`${API_SERVER}/api/action/center`);
-    actions.value = response.data.data;
+    const response = await axios.get(`${API_SERVER}/api/action/center`); //llamamos a la ruta api
+    actions.value = response.data.data; //recogemos los datos que nos devuelve
   } catch (error) {
     console.error("Error al obtener las acciones:", error);
   }
@@ -91,12 +91,13 @@ const fetchActions = async () => {
 
 const editAction = (action) => {
   selectedAction.value = {
-    ...action,
-    date_init: action.date_init ? action.date_init.split("T")[0] : "",
+    ...action, //compiamos la accion seleccionada
+    date_init: action.date_init ? action.date_init.split("T")[0] : "", //funcion para separar el valor del tiempo
   };
   showModal.value = true;
 };
 
+// Función para cerrar el modal
 const closeModal = () => {
   showModal.value = false;
 };
@@ -121,7 +122,7 @@ const saveAction = async () => {
         `${API_SERVER}/api/action/${selectedAction.value.id}/update`,
         dataToSend,
         {
-          headers: {
+          headers: { //pasamos como archivo JSON temporal todos los parametros a cambiar
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           }
@@ -129,14 +130,14 @@ const saveAction = async () => {
     );
 
     console.log(response.data);
-    Swal.fire({
+    Swal.fire({ //mostramos el error
       timer: 1500,
       showConfirmButton: false,
       icon: "success",
       title: "Acción actualizada con éxito"
     });
-    fetchActions();
-    closeModal();
+    fetchActions(); //llamamos de nuevo a la consulta para "recargar" las actividades
+    closeModal(); //cerramos el pop-up
   } catch (error) {
     console.error("Error al actualizar la acción:", error.response?.data || error);
     Swal.fire({
@@ -162,7 +163,7 @@ const deleteAction = async (id) => {
   }).then(async (result) => {
     if (result.isConfirmed) {
       try {
-        await axios.delete(`${API_SERVER}/api/action/${id}/destroy`);
+        await axios.delete(`${API_SERVER}/api/action/${id}/destroy`); //llamada al metodo del backend
         await fetchActions();
         await Swal.fire({
           icon: "success",
@@ -181,7 +182,7 @@ const viewUsers = (actionId) => {
   showPanel.value = false;
 };
 
-onMounted(fetchActions);
+onMounted(fetchActions); //metodo que cargaremos nada mas acceder al componente
 </script>
 
 <style scoped>
