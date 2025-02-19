@@ -11,7 +11,7 @@ const router = useRouter();
 const API_SERVER = import.meta.env.VITE_API_SERVER; // Asegúrate de que la variable esté en .env
 const userSession = ref("");
 async function validarUsuario() {
-  
+
   try {
     const response = await axios.post(`${API_SERVER}/api/login`, {
       email: mail.value,
