@@ -12,7 +12,6 @@ const API_SERVER = import.meta.env.VITE_API_SERVER; // Asegúrate de que la vari
 const userSession = ref("");
 async function validarUsuario() {
   this.error = null;
-  this.isLoading = true;
 
   try {
     const response = await axios.post(`${API_SERVER}/api/login`, {
@@ -64,7 +63,6 @@ async function validarUsuario() {
       });
     }
   } finally {
-    this.isLoading = false;
   }
 }
 function register(){
